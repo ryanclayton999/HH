@@ -8,7 +8,7 @@ from imagekit.processors import ResizeToFit
 class Album(models.Model):
     title = models.CharField(max_length=70)
     description = models.TextField(max_length=1024)
-    thumb = models.ImageField(upload_to='albums')
+    thumb = ProcessedImageField(upload_to='albums', processors=[ResizeToFit(300)], format='JPEG', options={'quality': 90})
     tags = models.CharField(max_length=250)
     is_visible = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -22,8 +22,8 @@ class Album(models.Model):
         return self.title
 
 class AlbumImage(models.Model):
-    image = models.ImageField(upload_to='albums')
-    thumb = models.ImageField(upload_to='albums')
+    image = ProcessedImageField(upload_to='albums', processors=[ResizeToFit(1280)], format='JPEG', options={'quality': 70})
+    thumb = ProcessedImageField(upload_to='albums', processors=[ResizeToFit(300)], format='JPEG', options={'quality': 80})
     album = models.ForeignKey('album', on_delete=models.PROTECT)
     alt = models.CharField(max_length=255, default=uuid.uuid4)
     created = models.DateTimeField(auto_now_add=True)
